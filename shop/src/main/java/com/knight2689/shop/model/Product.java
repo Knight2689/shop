@@ -1,5 +1,6 @@
 package com.knight2689.shop.model;
 
+import com.knight2689.shop.constant.ProductCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,13 +20,14 @@ public class Product {
     @Column(name = "product_name")
     private String productName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "category")
-    private String category;
-
-    @Column(name = "stock")
-    private Integer price;
+    private ProductCategory category;
 
     @Column(name = "price")
+    private Integer price;
+
+    @Column(name = "stock")
     private Integer stock;
 
     @Column(name = "image_path")
@@ -41,4 +43,15 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_modified_date")
     private Date lastModifiedDate;
+
+    @PrePersist
+    protected void onCreate() {
+        createdDate = new Date();
+        lastModifiedDate = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        lastModifiedDate = new Date();
+    }
 }

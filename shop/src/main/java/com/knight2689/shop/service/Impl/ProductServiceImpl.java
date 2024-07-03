@@ -1,5 +1,6 @@
 package com.knight2689.shop.service.Impl;
 
+import com.knight2689.shop.constant.ProductCategory;
 import com.knight2689.shop.model.Product;
 import com.knight2689.shop.repository.ProductRepository;
 import com.knight2689.shop.service.ProductService;
@@ -36,8 +37,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllProducts(ProductCategory category, String search) {
+        if (category == null && (search == null || search.isEmpty())) {
+            return productRepository.findAll();
+        }
+        return productRepository.findByCategoryAndSearch(category, search);
     }
 
     @Override

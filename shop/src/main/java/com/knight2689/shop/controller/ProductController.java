@@ -1,5 +1,6 @@
 package com.knight2689.shop.controller;
 
+import com.knight2689.shop.constant.ProductCategory;
 import com.knight2689.shop.model.Product;
 import com.knight2689.shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(){
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search
+    ){
+        List<Product> products = productService.getAllProducts(category,search);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer id){

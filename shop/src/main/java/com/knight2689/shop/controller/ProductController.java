@@ -1,9 +1,11 @@
 package com.knight2689.shop.controller;
 
 import com.knight2689.shop.constant.ProductCategory;
+import com.knight2689.shop.dto.ProductQueryParams;
 import com.knight2689.shop.model.Product;
 import com.knight2689.shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +41,23 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(
+            // 查詢條件
             @RequestParam(required = false) ProductCategory category,
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+
+            // 排序條件
+            @RequestParam(required = false) String sortField,
+            @RequestParam(required = false) String sortDirection
     ){
-        List<Product> products = productService.getAllProducts(category,search);
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setCategory(category);
+        productQueryParams.setSearch(search);
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection != null ? sortDirection : "asc"),
+                sortField != null ? sortField : "createDate");
+
+
+        List<Product> products = productService.getAllProducts(productQueryParams,sort);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

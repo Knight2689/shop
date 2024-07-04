@@ -1,10 +1,12 @@
 package com.knight2689.shop.service.Impl;
 
 import com.knight2689.shop.constant.ProductCategory;
+import com.knight2689.shop.dto.ProductQueryParams;
 import com.knight2689.shop.model.Product;
 import com.knight2689.shop.repository.ProductRepository;
 import com.knight2689.shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -37,11 +39,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProducts(ProductCategory category, String search) {
-        if (category == null && (search == null || search.isEmpty())) {
-            return productRepository.findAll();
+    public List<Product> getAllProducts(ProductQueryParams productQueryParams, Sort sort) {
+        if (productQueryParams.getCategory() == null && (productQueryParams.getSearch() == null || productQueryParams.getSearch().isEmpty())) {
+            return productRepository.findAll(sort);
         }
-        return productRepository.findByCategoryAndSearch(category, search);
+        return productRepository.findByCategoryAndSearch(productQueryParams.getCategory(), productQueryParams.getSearch(), sort);
     }
 
     @Override

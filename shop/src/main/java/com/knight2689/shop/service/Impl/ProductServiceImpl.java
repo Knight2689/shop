@@ -1,15 +1,14 @@
 package com.knight2689.shop.service.Impl;
 
-import com.knight2689.shop.constant.ProductCategory;
 import com.knight2689.shop.dto.ProductQueryParams;
 import com.knight2689.shop.model.Product;
 import com.knight2689.shop.repository.ProductRepository;
 import com.knight2689.shop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -39,11 +38,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProducts(ProductQueryParams productQueryParams, Sort sort) {
+    public Page<Product> getAllProducts(ProductQueryParams productQueryParams, Pageable pageable) {
         if (productQueryParams.getCategory() == null && (productQueryParams.getSearch() == null || productQueryParams.getSearch().isEmpty())) {
-            return productRepository.findAll(sort);
+            return productRepository.findAll(pageable);
         }
-        return productRepository.findByCategoryAndSearch(productQueryParams.getCategory(), productQueryParams.getSearch(), sort);
+        return productRepository.findByCategoryAndSearch(productQueryParams.getCategory(), productQueryParams.getSearch(), pageable);
     }
 
     @Override
